@@ -8,6 +8,7 @@ module.exports = (globals) =>
 		res.locals.ctx = {}
 		res.locals.ctx.sessionid = req.session.id if req.session?.id?
 		res.locals.ctx.user = res.locals.user if res.locals.user?
+		res.locals.ctx.role = res.locals.user.role if res.locals.user?.role?
 		res.locals.ctx.hasUserLoggedIn = res.locals.hasUserLoggedIn if res.locals.hasUserLoggedIn?
 		res.locals.ctx.locale = res.locals.locale if res.locals.locale?
 		res.locals.ctx.path = req.path
