@@ -1,3 +1,5 @@
+_ = require 'underscore'
+
 module.exports = (globals) =>
 	throw new Error("Globals must be informed of type Globals or undefined") if not(globals instanceof require('./../globals').instance)
 
@@ -7,9 +9,9 @@ module.exports = (globals) =>
 		if res.locals.ctx? then return next()
 		res.locals.ctx = {}
 		res.locals.ctx.sessionid = req.session.id if req.session?.id?
-		res.locals.ctx.user = res.locals.user if res.locals.user?
-		res.locals.ctx.role = res.locals.user.role if res.locals.user?.role?
-		res.locals.ctx.hasUserLoggedIn = res.locals.hasUserLoggedIn if res.locals.hasUserLoggedIn?
+		res.locals.ctx.user = res.user if req.user?
+		res.locals.ctx.role = req.user.role if req.user?.role?
+		res.locals.ctx.hasUserLoggedIn = req.isAuthenticated() if _.isFunction(req.isAuthenticated)
 		res.locals.ctx.locale = res.locals.locale if res.locals.locale?
 		res.locals.ctx.path = req.path
 		res.locals.ctx.method = req.method
