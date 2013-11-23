@@ -30,4 +30,4 @@ module.exports = (grunt) ->
 	grunt.registerTask "dev", ["clean", "coffee"]
 
 	# By default, lint and run all tests.
-	grunt.registerTask "default", ["jshint", "dev"]
+	grunt.registerTask "default", ["dev"]
