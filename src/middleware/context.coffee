@@ -9,7 +9,7 @@ module.exports = (globals) =>
 		if res.locals.ctx? then return next()
 		res.locals.ctx = {}
 		res.locals.ctx.sessionid = req.session.id if req.session?.id?
-		res.locals.ctx.user = res.user if req.user?
+		res.locals.ctx.user = req.user if req.isAuthenticated() and req.user?
 		res.locals.ctx.role = req.user.role if req.user?.role?
 		res.locals.ctx.hasUserLoggedIn = req.isAuthenticated() if _.isFunction(req.isAuthenticated)
 		res.locals.ctx.locale = res.locals.locale if res.locals.locale?
