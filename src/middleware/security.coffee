@@ -6,7 +6,9 @@ module.exports = (globals)->
 	throw new Error("App is required") if not globals.app()?
 	app = globals.app()
 	logger = globals.iOption("securityLogger", globals.component("utils:loggerClass"))
-	UserService = globals.component("service:user")
+	retrieveUserByEmail = globals.component("security:user:retrieveUserByEmail")
+	retrieveUserById = globals.component("security:user:retrieveUserById")
+	doesPasswordMatch = globals.component("security:user:doesPasswordMatch")
 	ExpectedError = globals.component("error:ExpectedError")
 
 	authenticate = (req, res, next, redirect=true)->
@@ -50,6 +52,15 @@ module.exports = (globals)->
 			logger.info message: "User is not authenticated or is not an admin, forbidden access to #{req.path}"
 			next(new ExpectedError(req.__("Sorry, but you do not have access to that page!")))
 
+	globals.component "security:hasRole", (role)->
+		return (req, res, next) ->
+			if req.isAuthenticated() and req.user.role is role
+				logger.trace message: "User has role=#{role}"
+				next()
+			else
+				logger.info message: "User is not authenticated or is not an #{role}, forbidden access to #{req.path}"
+				next(new ExpectedError(req.__("Sorry, but you do not have access to that page!")))
+
 	## CONFIGURATION
 	# set up session serialization based on [configure] (http://passportjs.org/guide/configure/)
 	passport.serializeUser (user, done) ->
@@ -57,7 +68,7 @@ module.exports = (globals)->
 		done(null, user.id)
 	passport.deserializeUser (id, done) ->
 		logger.trace message: "Deserializing user with id=#{id}"
-		UserService.retrieveUserById(id)
+		retrieveUserById(id)
 			.then( (user)->
 				done(null, user)
 			).fail( (error)->
@@ -67,11 +78,11 @@ module.exports = (globals)->
 	passport.use new LocalStrategy {passReqToCallback: true}, (req, username, password, done)->
 		logger.trace message: "Trying to authenticate user with username=#{username}", ctx: req.locals.ctx
 		foundUser = null
-		UserService.retrieveUserByEmail(username, req.locals.ctx)
+		retrieveUserByEmail(username, req.locals.ctx)
 			.then( (user)->
 				if not user then return null
 				foundUser = user
-				UserService.doesPasswordMatch(user, password, req.locals.ctx)
+				doesPasswordMatch(user, password, req.locals.ctx)
 			).then( (result)->
 				if not result then done(null, null)
 				else done(null, foundUser)
