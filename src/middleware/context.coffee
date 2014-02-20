@@ -2,12 +2,14 @@ _ = require 'underscore'
 
 module.exports = (globals) =>
 	throw new Error("Globals must be informed of type Globals or undefined") if not(globals instanceof require('./../globals').instance)
-
+	options = globals.options()
 	app = globals.app()
 
 	app.use (req, res, next) ->
 		if res.locals.ctx? then return next()
 		res.locals.ctx = {}
+		if options.disableI18n isnt false
+			res.locals.ctx.__ = res.locals.__
 		res.locals.ctx.sessionid = req.session.id if req.session?.id?
 		res.locals.ctx.user = req.user if req.isAuthenticated() and req.user?
 		res.locals.ctx.role = req.user.role if req.user?.role?
