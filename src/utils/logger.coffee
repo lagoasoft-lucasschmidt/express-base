@@ -12,6 +12,7 @@ colors.setTheme {
 	warning: 'yellow',
 	debug: 'blue',
 	error: 'red',
+	emerg: 'underline',
 	trace: 'cyan',
 }
 
