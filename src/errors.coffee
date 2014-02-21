@@ -40,6 +40,11 @@ module.exports = (globals)->
 			super(message)
 			@name = 'Fatal Error'
 
+	class HandledInternalError extends AppError
+		constructor:(message, @ctx, @originalError)->
+			super(message)
+			@name = 'Handled Internal Error'
+
 	globals.component("error:AppError", AppError)
 	globals.component("error:InternalError", InternalError)
 	globals.component("error:InvalidArgumentsError", InvalidArgumentsError)
@@ -48,5 +53,6 @@ module.exports = (globals)->
 	globals.component("error:NotFoundError", NotFoundError)
 	globals.component("error:ExpectedError", ExpectedError)
 	globals.component("error:FatalError", InternalError)
+	globals.component("error:HandledInternalError", HandledInternalError)
 
 	return globals

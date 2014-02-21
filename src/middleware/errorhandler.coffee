@@ -11,6 +11,7 @@ module.exports = (globals)->
 	ExpectedError = globals.component("error:ExpectedError")
 	InvalidArgumentsError = globals.component("error:InvalidArgumentsError")
 	FatalError = globals.component("error:FatalError")
+	HandledInternalError = globals.component("error:HandledInternalError")
 	# set up error handler
 	process.on 'uncaughtException', (err) -> logger.error msg: "uncaughtException", error: err
 
@@ -26,6 +27,7 @@ module.exports = (globals)->
 		else if err instanceof NotFoundError then handleNotFound req, res, next
 		else if err instanceof ExpectedError then handleExpectedError err, req, res, next
 		else if err instanceof FatalError then handleFatalError err, req, res, next
+		else if err instanceof HandledInternalError then handleHandledError err, req, res, next
 		else handleInternalError err, req, res, next
 
 	# Handles Errors with status=403, Forbidden.
@@ -84,9 +86,14 @@ module.exports = (globals)->
 			req.flash('error', "internalError")
 			redirectToRefererOrPlace(req, res, '/')
 
-	# Handles all other Errors.
 	handleFatalError = (err, req, res, next) ->
 		logger.emerg message: "Handling fatal error on path=#{req.path}", error: err.error or err
+		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
+		else
+			req.flash('error', "internalError")
+			redirectToRefererOrPlace(req, res, '/')
+
+	handleHandledInternalError = (err, req, res, next) ->
 		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
 		else
 			req.flash('error', "internalError")
