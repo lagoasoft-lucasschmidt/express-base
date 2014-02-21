@@ -65,16 +65,12 @@ module.exports = (globals)->
 	class CustomConsoleTransport extends winston.transports.Console
 
 		log:(level, message, meta, callback)=>
-			if meta?.error?
-				if meta.error.logged then return callback()
-				else meta.error.logged = true
+			if _.isString(meta?.path)
+				console.log "#{meta?.pid} - #{meta?.path?['path']}"
 			if meta?.error? and meta.error.stack
 				console.log "#{meta?.pid} #{meta.error.stack}".error
-			else if meta?.error?
-				console.log "#{meta?.pid} #{JSON.stringify(meta.error)}".error
 			tags = ''
 			tags = meta.tags.toString() if meta?.tags?
-			console.log "#{meta?.pid} - #{meta?.path?['path']}" if meta?.path?
 			console.log "#{meta?.pid} - #{meta?.user?.email or 'anon'} #{tags['tags']} #{moment().format("MMMM Do YYYY, h:mm:ss a").date} - #{level[level]} - #{message[level]}"
 			callback()
 
