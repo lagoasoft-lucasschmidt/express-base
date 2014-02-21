@@ -27,7 +27,7 @@ module.exports = (globals)->
 		else if err instanceof NotFoundError then handleNotFound req, res, next
 		else if err instanceof ExpectedError then handleExpectedError err, req, res, next
 		else if err instanceof FatalError then handleFatalError err, req, res, next
-		else if err instanceof HandledInternalError then handleHandledError err, req, res, next
+		else if err instanceof HandledInternalError then handleHandledInternalError err, req, res, next
 		else handleInternalError err, req, res, next
 
 	# Handles Errors with status=403, Forbidden.
