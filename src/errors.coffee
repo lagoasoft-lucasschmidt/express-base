@@ -4,6 +4,8 @@ module.exports = (globals)->
 	class AppError extends Error
 		constructor:(@message)->
 			super(@message)
+			Error.call @, @message or @name
+			Error.captureStackTrace @, arguments.callee
 
 	class InternalError extends AppError
 		constructor:(@message, @ctx, @originalError)->
