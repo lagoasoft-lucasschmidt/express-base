@@ -30,40 +30,35 @@ module.exports = (globals)->
 		else if err instanceof HandledInternalError then handleHandledInternalError err, req, res, next
 		else handleInternalError err, req, res, next
 
-	# Handles Errors with status=403, Forbidden.
 	handleForbidden = (err, req, res, next) ->
-		logger.warn message: "Forbidden access on path=#{req.path}"
+		logger.warn message: "Forbidden access on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(403, { error: 'Forbidden' })
 		else
 			req.flash('error', "forbidden")
 			redirectToRefererOrPlace(req, res,'/')
 
-	# Handles Errors with status=401, Not Authorized.
 	handleNotAuthorized = (err, req, res, next) ->
-		logger.warn message: "Not Authorized access on path=#{req.path}"
+		logger.warn message: "Not Authorized access on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(401, { error: 'Not Authorized' })
 		else
 			req.flash('error', "notAuthorized")
 			redirectToRefererOrPlace(req, res, '/')
 
-	# Handles Errors with status=404, Not Found.
 	handleNotFound = (req, res, next) ->
-		logger.warn message: "Not Found access on path=#{req.path}"
+		logger.warn message: "Not Found access on path=#{req.path}", ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(404, { error: 'Not Found' })
 		else
 			req.flash('error', "notFound")
 			req.flash('errorMessage', req.__("Página %s não foi encontrado.", req.path))
 			redirectToRefererOrPlace(req, res, '/')
 
-	# Handles Errors with status=400, Bad Request.
 	handleBadRequest = (err, req, res, next) ->
-		logger.warn message: "Bad Request access on path=#{req.path}"
+		logger.warn message: "Bad Request access on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(400, { error: 'Bad Request' })
 		else
 			req.flash('error', "badRequest")
 			redirectToRefererOrPlace(req, res,'/')
 
-	# Handles Errors of type ValidationError.
 	handleValidationError = (err, req, res, next) ->
 		if req.accepts(['html', 'json']) == 'json' then res.json(400, { error: 'Validation Error', errors: err.errors })
 		else
@@ -72,28 +67,29 @@ module.exports = (globals)->
 			redirectToRefererOrPlace(req, res, '/')
 
 	handleExpectedError = (err, req, res, next) ->
+		logger.info message: "Expected Error on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(409, { error: 'Expected Error', message: err.message })
 		else
 			req.flash('error', "expectedError")
 			req.flash('errorMessage', err.message)
 			redirectToRefererOrPlace(req, res, '/')
 
-	# Handles all other Errors.
 	handleInternalError = (err, req, res, next) ->
-		logger.error message: "Handling internal error on path=#{req.path}", error: err.error or err
+		logger.error message: "Handling internal error on path=#{req.path} with message=#{err.message}", error: err, ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
 		else
 			req.flash('error', "internalError")
 			redirectToRefererOrPlace(req, res, '/')
 
 	handleFatalError = (err, req, res, next) ->
-		logger.emerg message: "Handling fatal error on path=#{req.path}", error: err.error or err
+		logger.emerg message: "Handling fatal error on path=#{req.path}", error: err, ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
 		else
 			req.flash('error', "internalError")
 			redirectToRefererOrPlace(req, res, '/')
 
 	handleHandledInternalError = (err, req, res, next) ->
+		logger.warn message: "Handled Internal Error on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
 		else
 			req.flash('error', "internalError")
