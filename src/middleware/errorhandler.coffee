@@ -76,7 +76,10 @@ module.exports = (globals)->
 			redirectToRefererOrPlace(req, res, '/')
 
 	handleInternalError = (err, req, res, next) ->
-		logger.error message: "Handling internal error on path=#{req.path} with message=#{err.message}", error: err, ctx:res.locals.ctx
+		if err instanceof internalError
+			logger.error message: "Handling internal error on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
+		else
+			logger.error message: "Handling internal error on path=#{req.path} with message=#{err.message}", error: err, ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
 		else
 			req.flash('error', "internalError")
