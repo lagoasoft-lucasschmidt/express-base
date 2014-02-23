@@ -12,6 +12,7 @@ module.exports = (globals)->
 	ExpectedError = globals.component("error:ExpectedError")
 	InvalidArgumentsError = globals.component("error:InvalidArgumentsError")
 	FatalError = globals.component("error:FatalError")
+	InternalError = globals.component("error:InternalError")
 	HandledInternalError = globals.component("error:HandledInternalError")
 	# set up error handler
 	process.on 'uncaughtException', (err) -> logger.error msg: "uncaughtException", error: err
@@ -76,7 +77,7 @@ module.exports = (globals)->
 			redirectToRefererOrPlace(req, res, '/')
 
 	handleInternalError = (err, req, res, next) ->
-		if err instanceof internalError
+		if err instanceof InternalError
 			logger.error message: "Handling internal error on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
 		else
 			logger.error message: "Handling internal error on path=#{req.path} with message=#{err.message}", error: err, ctx:res.locals.ctx
