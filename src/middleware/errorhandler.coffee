@@ -82,7 +82,7 @@ module.exports = (globals)->
 			redirectToRefererOrPlace(req, res, '/')
 
 	handleFatalError = (err, req, res, next) ->
-		logger.emerg message: "Handling fatal error on path=#{req.path}", error: err, ctx:res.locals.ctx
+		logger.emerg message: "Handling fatal error on path=#{req.path} with message=#{err.message}", error: err, ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
 		else
 			req.flash('error', "internalError")
