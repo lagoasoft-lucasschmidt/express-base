@@ -2,7 +2,8 @@ module.exports = (globals)->
 	throw new Error("Globals must be informed") if not (globals instanceof require('./globals').instance)
 
 	class AppError extends Error
-
+		constructor:(message)->
+			super(message)
 
 	class InternalError extends AppError
 		constructor:(message, @ctx, @originalError)->
@@ -33,7 +34,6 @@ module.exports = (globals)->
 		constructor:(message, @ctx)->
 			super(message)
 			@name = 'Expected Error'
-			@message = message
 
 	class FatalError extends AppError
 		constructor:(message, @ctx, @originalError)->
@@ -52,7 +52,7 @@ module.exports = (globals)->
 	globals.component("error:ForbiddenError", ForbiddenError)
 	globals.component("error:NotFoundError", NotFoundError)
 	globals.component("error:ExpectedError", ExpectedError)
-	globals.component("error:FatalError", InternalError)
+	globals.component("error:FatalError", FatalError)
 	globals.component("error:HandledInternalError", HandledInternalError)
 
 	return globals

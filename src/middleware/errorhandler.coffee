@@ -1,4 +1,5 @@
 redirectToRefererOrPlace = require './../utils/redirect'
+stringify = require('json-stringify-safe')
 
 module.exports = (globals)->
 	throw new Error("Globals must be informed") if not (globals instanceof require('./../globals').instance)
@@ -17,7 +18,7 @@ module.exports = (globals)->
 
 	# Function that will determine which error occured and call the correct handler.
 	handleError = (err, req, res, next) ->
-		logger.warn msg: "Handling error="+err
+		logger.trace msg: "Handling error=#{err} with json=#{stringify(err, null, 2)}"
 		## determine what kind of error occured
 		if err?.status? and (err?.status is 403) then handleForbidden err, req, res, next
 		else if err?.status? and err?.status is 401 then handleNotAuthorized err, req, res, next
