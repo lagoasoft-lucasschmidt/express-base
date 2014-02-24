@@ -24,12 +24,13 @@ module.exports = (globals)->
 		if err?.status? and (err?.status is 403) then handleForbidden err, req, res, next
 		else if err?.status? and err?.status is 401 then handleNotAuthorized err, req, res, next
 		else if err?.status? and err?.status is 400 then handleBadRequest err, req, res, next
-		else if err instanceof ValidationError or err instanceof InvalidArgumentsError then handleValidationError err, req, res, next
+		else if err instanceof ValidationError then handleValidationError err, req, res, next
 		else if err instanceof ForbiddenError then handleForbidden err, req, res, next
 		else if err instanceof NotFoundError then handleNotFound req, res, next
 		else if err instanceof ExpectedError then handleExpectedError err, req, res, next
 		else if err instanceof FatalError then handleFatalError err, req, res, next
 		else if err instanceof HandledInternalError then handleHandledInternalError err, req, res, next
+		else if err instanceof InvalidArgumentsError then handleInvalidArgumentsError err, req, res, next
 		else handleInternalError err, req, res, next
 
 	handleForbidden = (err, req, res, next) ->
@@ -96,6 +97,13 @@ module.exports = (globals)->
 	handleHandledInternalError = (err, req, res, next) ->
 		logger.warn message: "Handled Internal Error on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
 		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Internal Error' })
+		else
+			req.flash('error', "internalError")
+			redirectToRefererOrPlace(req, res, '/')
+
+	handleInvalidArgumentsError = (err, req, res, next) ->
+		logger.warn message: "Invalid Arguments Error on path=#{req.path} with message=#{err.message}", ctx:res.locals.ctx
+		if req.accepts(['html', 'json']) == 'json' then res.json(500, { error: 'Invalid Arguments' })
 		else
 			req.flash('error', "internalError")
 			redirectToRefererOrPlace(req, res, '/')
