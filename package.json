@@ -1,27 +1,27 @@
 {
-  "name": "express-base",
-  "version": "0.0.6",
-  "description": "Express Base Setup",
-  "main": "lib/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Lucas Schmidt",
-  "license": "MIT",
-  "devDependencies": {
-    "grunt-contrib-jshint": "~0.6.0",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt": "~0.4.1",
-    "grunt-contrib-coffee": "~0.7.0",
-    "underscore": "~1.5.2",
-    "underscore.string": "~2.3.3"
-  },
-  "dependencies": {
-    "underscore": "~1.5.2",
-    "winston": "~0.7.2",
-    "moment": "~2.4.0",
-    "colors": "~0.6.2",
-    "json-stringify-safe": "~5.0.0"
-  }
+	"name": "express-base",
+	"version": "0.0.7",
+	"description": "Express Base Setup",
+	"main": "lib/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Lucas Schmidt",
+	"license": "MIT",
+	"devDependencies": {
+		"grunt-contrib-jshint": "~0.6.0",
+		"grunt-contrib-clean": "~0.4.0",
+		"grunt-contrib-nodeunit": "~0.2.0",
+		"grunt": "~0.4.1",
+		"grunt-contrib-coffee": "~0.7.0",
+		"underscore": "~1.5.2",
+		"underscore.string": "~2.3.3"
+	},
+	"dependencies": {
+		"underscore": "~1.5.2",
+		"winston": "~0.7.2",
+		"moment": "~2.4.0",
+		"colors": "~0.6.2",
+		"json-stringify-safe": "~5.0.0"
+	}
 }

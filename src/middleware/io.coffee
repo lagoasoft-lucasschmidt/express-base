@@ -36,7 +36,7 @@ module.exports = (globals)->
 		key: config.sessionConfig.key #the cookie where express (or connect) stores its session id.
 		secret: config.sessionConfig.secret #the session secret to parse the cookie
 		store: config.sessionConfig.store #the session store that express uses
-		fail: (data, accept) -> # *optional* callbacks on success or fail
+		fail: (data, message, error, accept) -> # *optional* callbacks on success or fail
 			accept null, false # second param takes boolean on whether or not to allow handshake
 
 		success: (data, accept) ->
