@@ -32,6 +32,7 @@ module.exports = (globals)->
 
 	passportSocketIo = require("passport.socketio")
 	app.io.set "authorization", passportSocketIo.authorize(
+		passport: require('passport')
 		cookieParser: express.cookieParser #or connect.cookieParser
 		key: config.sessionConfig.key #the cookie where express (or connect) stores its session id.
 		secret: config.sessionConfig.secret #the session secret to parse the cookie
