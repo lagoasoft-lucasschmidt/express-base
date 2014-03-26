@@ -19,6 +19,10 @@ module.exports = (globals) =>
 		app.set('views', options.viewsDir)
 	else logger "Didnt set viewsDir"
 
+	if options.enableViewCache
+		logger "Enabling view cache"
+		app.enable('view cache')
+
 	# Set up view engine
 	if _.isString(options.viewEngine)
 		logger "Setting viewEngine as #{options.viewEngine}"
